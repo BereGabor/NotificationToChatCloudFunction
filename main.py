@@ -1,8 +1,9 @@
 import json, base64
+import os
 from httplib2 import Http
 from json import dumps
 
-webhook = "https://chat.googleapis.com/v1/spaces/AAAADEXWz9E/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=GaEUBAJ3-LVtPAp4DsuVh_RTyeEV2666QOkw7gzoVIQ%3D"
+webhook = os.getenv('WEBHOOK_URL')
 
 def main(event, context):
     pubsub_message = base64.b64decode(event['data']).decode('utf-8')

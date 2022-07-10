@@ -17,17 +17,20 @@
 
 # Enable the services in case they are not enabled
 gcloud services enable cloudbuild.googleapis.com cloudfunctions.googleapis.com
-
 FN_PUBSUB_TOPIC="MLFFAlertToChat"
-FN_REGION="us-central1"
+FN_REGION="europe-west1"
 FN_SOURCE_DIR="./"
 FN_SA="pubsub-sendmail@PROJECTID.iam.gserviceaccount.com"
-#FN_VPC_CONN="pubsub-sendmail"
 
-ENVVARS_FILE=/tmp/send_mail_envvars.$$
+#creaate topic
+gcloud pubsub topics create $FN_PUBSUB_TOPIC
+
+WEBHOOK_URL="https://chat.googleapis.com/v1/spaces/AAAADEXWz9E/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=GaEUBAJ3-LVtPAp4DsuVh_RTyeEV2666QOkw7gzoVIQ%3D"
+
+ENVVARS_FILE=/tmp/send_chatmsg_envvars.$$
 
 cat <<EOF >$ENVVARS_FILE
-WEBHOOK_URL: "$MAIL_FROM"
+WEBHOOK_URL: "$WEBHOOK_URL"
 EOF
 
 echo
@@ -42,9 +45,10 @@ gcloud functions deploy Send-Alert-to-MLFF-ChatRoom \
 --region $FN_REGION \
 --runtime python38 \
 --trigger-topic $FN_PUBSUB_TOPIC \
-#    --service-account "$FN_SA" \
 --env-vars-file $ENVVARS_FILE \
---source $FN_SOURCE_DIR
+--source $FN_SOURCE_DIR \
+--entry-point main
+
 #else
 #    gcloud functions deploy Send-Alert-to-MLFF-ChatRoom \
 #    --region $FN_REGION \
