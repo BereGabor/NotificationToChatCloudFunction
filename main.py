@@ -14,7 +14,7 @@ client = google.cloud.logging.Client()
 
 webhook = os.getenv('WEBHOOK_URL')
 message_type = os.getenv('MSG_TYPE', "TEXT")
-logging_level = os.getenv('LOG_LEVEL', logging.INFO)
+logging_level = int(os.getenv('LOG_LEVEL', "10"))
 
 #CRITICAL = 50
 #ERROR = 40
