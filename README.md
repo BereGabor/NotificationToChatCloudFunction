@@ -23,5 +23,7 @@ The cloud function use environment variables to configuration.
 
 ## Environment variables
 WEBHOOK_URL: Google chat web hook URL.
+MSG_TYPE: [TEXT,CARD] TEXT: Simple text message. CARD: Card formated message
+
 
 
