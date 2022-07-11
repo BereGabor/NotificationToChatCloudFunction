@@ -32,11 +32,19 @@ WEBHOOK_URL="https://chat.googleapis.com/v1/spaces/AAAADEXWz9E/messages?key=AIza
 # CARD: Card type message
 MSG_TYPE="CARD"
 
+#CRITICAL = 50
+#ERROR = 40
+#WARNING = 30
+#INFO = 20
+#DEBUG = 10
+LOG_LEVEL=10
+
 ENVVARS_FILE=/tmp/send_chatmsg_envvars.$$
 
 cat <<EOF >$ENVVARS_FILE
 WEBHOOK_URL: "$WEBHOOK_URL"
 MSG_TYPE: "$MSG_TYPE"
+LOG_LEVEL: $LOG_LEVEL
 EOF
 
 echo
@@ -58,7 +66,7 @@ gcloud functions deploy Send-Alert-to-MLFF-ChatRoom \
 #else
 #    gcloud functions deploy Send-Alert-to-MLFF-ChatRoom \
 #    --region $FN_REGION \
-#    --runtime python38 \
+#    --runtime python37 \
 #    --trigger-topic $FN_PUBSUB_TOPIC \
  #   --service-account "$FN_SA" \
 #    --env-vars-file $ENVVARS_FILE \

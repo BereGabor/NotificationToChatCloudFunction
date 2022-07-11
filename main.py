@@ -1,18 +1,46 @@
 import json, base64
+from nis import match
 import os
 from httplib2 import Http
 from json import dumps
+# Imports the Cloud Logging client library
+import google.cloud.logging
+# Imports Python standard library logging
+import logging
+import traceback
+
+# Instantiates a client
+client = google.cloud.logging.Client()
 
 webhook = os.getenv('WEBHOOK_URL')
 message_type = os.getenv('MSG_TYPE', "TEXT")
+logging_level = os.getenv('LOG_LEVEL', logging.INFO)
+
+#CRITICAL = 50
+#ERROR = 40
+#WARNING = 30
+#INFO = 20
+#DEBUG = 10
+
+
+# Retrieves a Cloud Logging handler based on the environment
+# you're running in and integrates the handler with the
+# Python logging module. By default this captures all logs
+# at INFO level and higher
+client.setup_logging(log_level=logging_level)
+
+
 
 def main(event, context):
     pubsub_message = base64.b64decode(event['data']).decode('utf-8')
-    print('Message :{}'.format(pubsub_message))
+    logging.debug('Message :{}'.format(pubsub_message))
     log_data = json.loads(pubsub_message)
     if log_data["incident"]["state"] == "closed" :
-        print("The incident has been closed, don't notify")
+        logging.info("The incident has been closed, don't notify")
         return "True"
+    else:
+        logging.info("Incident alert triggered: " + log_data["incident"]["summary"])
+
     bot_message = buildMessage(log_data, message_type)    
     
     sendChatMessage(bot_message)
@@ -29,7 +57,7 @@ def sendChatMessage(msg):
         headers=message_headers,
         body=dumps(msg),
     )
-    print('response: {}'.format(response))
+    logging.debug('response: {}'.format(response))
     return "True"
 
 def buildMessage(event, msg_type):
@@ -38,8 +66,9 @@ def buildMessage(event, msg_type):
     project_id = event["incident"]["scoping_project_id"]
     resource_name = ""
     try:
-        resource_name = event["resource"]["labels"]["container_name"]
+        resource_name = event["incident"]["resource"]["labels"]["container_name"]
     except Exception as e:
+        logging.debug("Read resource name failed: " + traceback.format_exc() + " Use incident.resource_name value")
         resource_name = event["incident"]["resource_name"]
     
 
@@ -96,7 +125,7 @@ def buildMessage(event, msg_type):
                 }
             ]
         }
-    print("Chat message request: {}".format(json.dumps(event["incident"]["resource"], indent=4)))
+    logging.debug("Chat message request: {}".format(json.dumps(event["incident"]["resource"], indent=4)))
     return bot_message
 
 

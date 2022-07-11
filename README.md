@@ -25,8 +25,17 @@ Have to add pub/sub publisher role for the topic to monitorinng service account.
 You can find the exact service account name on notification channel detail page. You can send test messages from this page too. 
 
 ## Environment variables
-WEBHOOK_URL: Google chat web hook URL.  
-MSG_TYPE: [TEXT,CARD] TEXT: Simple text message. CARD: Card formated message  
+WEBHOOK_URL: Google chat web hook URL. mandatory! 
+MSG_TYPE: [TEXT,CARD] optional, default: TEXT
+TEXT: Simple text message. 
+CARD: Card formated message  
+
+LOG_LEVEL: [50,40,30,20,10] optional, default: 20
+#CRITICAL = 50
+#ERROR = 40
+#WARNING = 30
+#INFO = 20
+#DEBUG = 10
 
 ## Usefull links
 Chat message structure documentation and examples: https://developers.google.com/chat/api/guides/message-formats/cards  
