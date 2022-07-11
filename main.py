@@ -36,7 +36,12 @@ def buildMessage(event, msg_type):
     alert_policy = event["incident"]["policy_name"]
     incident_url = event["incident"]["url"]
     project_id = event["incident"]["scoping_project_id"]
-    resource_name = event["incident"]["resource_display_name"]
+    resource_name = ""
+    try:
+        resource_name = event["resource"]["labels"]["container_name"]
+    except Exception as e:
+        resource_name = event["incident"]["resource_name"]
+    
 
     #build simple text message by default
     bot_message = {
