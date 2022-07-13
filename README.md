@@ -44,4 +44,4 @@ Chat message structure documentation and examples: https://developers.google.com
 Google chat webhook: https://developers.google.com/chat/how-tos/webhooks  
 
 Sample alert event structure is in the gcp_alert_json_example.json.  
-https://github.com/BereGabor/NotificationToChatCloudFunction/blob/09c7bb66f0d796f9ea534a5541832f411e56076d/gcp_alert_json_example.json#L1-L60
+https://github.com/BereGabor/NotificationToChatCloudFunction/blob/605d7d8a03d2b25a21d43dc6dc9acf89de6dbd16/gcp_alert_json_example.json#L1-L60
